@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: istio-sidecar-injector
+data:
+  config: |-
+    policy: enabled
+    neverInjectSelector:
+      - matchExpressions:
+        - {key: openshift.io/build.name, operator: Exists}
+      - matchExpressions:
+        - {key: openshift.io/deployer-pod-for.name, operator: Exists}
+    template: |-
+      initContainers:

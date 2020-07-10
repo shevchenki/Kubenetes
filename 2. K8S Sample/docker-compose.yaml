@@ -1,0 +1,28 @@
+version: '3'
+services:
+  dynamodb:
+    image: amazon/dynamodb-local
+    container_name: dynamodb
+    ports:
+      - "8000:8000"
+
+  appserver:
+    build: ./appServer
+    image: appserver
+    tty: true
+    container_name: appserver
+    ports:
+      - "8080:8080"
+    depends_on:
+      - dynamodb
+  
+  webserver:
+    build: ./nginx
+    image: nginx
+    container_name: webserver
+    volumes:
+      - ./nginx/nginx/:/etc/nginx/conf.d/
+    ports:
+      - "80:80"
+    depends_on:
+      - appserver

@@ -1,0 +1,41 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: vote-dog-cat-gateway
+  namespace: vote-dog-cat-api
+spec:
+  selector:
+    istio: ingressgateway 
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: vote-dog-cat
+  namespace: vote-dog-cat-api
+spec:
+  hosts:
+  - "*"
+  # trafficPolicy:
+  #   connectionPool:
+  #     tcp:
+  #       maxConnections: 100
+  gateways:
+  - vote-dog-cat-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: frontend
+      weight: 50
+    - destination:
+        host: frontend2
+      weight: 50

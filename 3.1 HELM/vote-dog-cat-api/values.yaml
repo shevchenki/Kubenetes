@@ -1,0 +1,21 @@
+backend:
+  name: dynamodb
+  replicas: 1
+  image: 
+    repo: amazon/dynamodb-local
+    pullPolicy: IfNotPresent
+    port: 8000
+  service:
+    type: ClusterIP
+    port: 8000
+
+frontend:
+  name: frontend
+  replicas: 2
+  image: 
+    repo: duynamvnn1208/appserver:latest
+    pullPolicy: Always
+    port: 8080
+  service:
+    type: NodePort
+    port: 8080

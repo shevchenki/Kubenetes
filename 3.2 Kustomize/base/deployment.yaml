@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dynamodb-deployment
+  namespace: vote-dog-cat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dynamodb
+  template:
+    metadata:
+      labels:
+        app: dynamodb
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      - name: dynamodb
+        image: amazon/dynamodb-local
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+      restartPolicy: Always
+      
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: "vote-dog-cat"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      - name: frontend
+        image: [aws account id].dkr.ecr.[aws region].amazonaws.com/eks-repository/frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+      restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend2
+  namespace: "vote-dog-cat"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend2
+  template:
+    metadata:
+      labels:
+        app: frontend2
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      - name: frontend2
+        image: [aws account id].dkr.ecr.[aws region].amazonaws.com/eks-repository/frontend2:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+      restartPolicy: Always
+  

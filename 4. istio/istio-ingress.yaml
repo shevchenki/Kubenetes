@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: istio-ingressgateway
+  namespace: istio-system
+  annotations:
+    kubernetes.io/ingress.class: alb
+    # internet-facingタイプ使用
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    # internalタイプ使用
+    # alb.ingress.kubernetes.io/scheme: internal
+  labels:
+    app: istio-ingressgateway
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: istio-ingressgateway
+              servicePort: 80

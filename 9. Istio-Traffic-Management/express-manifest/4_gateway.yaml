@@ -1,0 +1,38 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: gateway-sample
+  namespace: express-sample
+spec:
+  selector:
+    istio: ingressgateway 
+  servers:
+  - port:
+      number: 9000
+      name: http-stg
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: express-vs
+  namespace: express-sample
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - gateway-sample
+  http:
+  - match:
+    - uri:
+        exact: /express
+    - uri:
+        prefix: /stylesheets
+    # - port: 8080
+    route:
+    - destination:
+        host: express
+        port:
+          number: 8080

@@ -1,0 +1,37 @@
+namespace: vote-dog-cat
+
+backend:
+  name: dynamodb
+  replicas: 1
+  containers: 
+    image: amazon/dynamodb-local
+    imagePullPolicy: IfNotPresent
+    containerPort: 8000
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+
+frontend:
+  name: frontend
+  replicas: 1
+  containers: 
+    image: duynamvnn1208/appserver:v3
+    imagePullPolicy: Always
+    containerPort: 8080
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8080
+
+frontend2:
+  name: frontend2
+  replicas: 1
+  containers: 
+    image: duynamvnn1208/appserver02:v3
+    imagePullPolicy: Always
+    containerPort: 8080
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8080

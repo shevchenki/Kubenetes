@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express
+  namespace: express-sample
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: express
+  template:
+    metadata:
+      labels:
+        app: express
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      - name: express
+        image: duynamvnn1208/express:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+  

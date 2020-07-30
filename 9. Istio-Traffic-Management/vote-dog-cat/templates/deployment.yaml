@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.backend.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.backend.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.backend.name }}
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      - name: {{ .Values.backend.name }}
+        image: {{ .Values.backend.containers.image }}
+        imagePullPolicy: {{ .Values.backend.containers.imagePullPolicy }}
+        ports:
+        - containerPort: {{ .Values.backend.containers.containerPort }}
+      restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.frontend.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.frontend.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.frontend.name }}
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      - name: {{ .Values.frontend.name }}
+        image: {{ .Values.frontend.containers.image }}
+        imagePullPolicy: {{ .Values.frontend.containers.imagePullPolicy }}
+        ports:
+        - containerPort: {{ .Values.frontend.containers.containerPort }}
+      restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.frontend2.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.frontend2.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.frontend2.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.frontend2.name }}
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      - name: {{ .Values.frontend2.name }}
+        image: {{ .Values.frontend2.containers.image }}
+        imagePullPolicy: {{ .Values.frontend2.containers.imagePullPolicy }}
+        ports:
+        - containerPort: {{ .Values.frontend2.containers.containerPort }}
+      restartPolicy: Always

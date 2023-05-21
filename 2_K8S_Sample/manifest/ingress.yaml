@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: appserver
@@ -6,13 +6,17 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
   labels:
     app: appserver
 spec:
   rules:
     - http:
         paths:
-          - path: /*
-            backend:
-              serviceName: appserver
-              servicePort: 8080
+        - path: /*
+          pathType: Prefix
+          backend:
+            service:
+              name: appserver
+              port:
+                number: 8080
